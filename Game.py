@@ -28,8 +28,8 @@ class Game:
         self.hs = self.statistics.hs
 
         # Resources.
-        self.bg_music = pygame.mixer.Sound('audio/Hoppin.mp3')
-        self.bg_music.play(loops=-1)
+        #self.bg_music = pygame.mixer.Sound('audio/Hoppin.mp3')
+        #self.bg_music.play(loops=-1)
         self.bg_img = pygame.image.load('graphics/morninghill.png').convert()
 
         self.scale_x, self.scale_y = useful.get_scale(self.screen, self.bg_img)
