@@ -1,67 +1,53 @@
 import pygame
 import useful
+from health_bar import HealthBar
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        player_walk_1 = useful.load_scale_image(
+        playerWalk1 = useful.load_scale_image(
             "graphics/player/sprite_cuteknight1.png",
-            game.scale_x, game.scale_y, 1)
-        player_walk_2 = useful.load_scale_image(
+            game.scaleX, game.scaleY, 1)
+        playerWalk2 = useful.load_scale_image(
             "graphics/player/sprite_cuteknight2.png",
-            game.scale_x, game.scale_y, 1)
-        self.player_walk = [player_walk_1, player_walk_2]
-        self.player_index = 0
-        self.player_jump = useful.load_scale_image(
+            game.scaleX, game.scaleY, 1)
+        self.playerWalk = [playerWalk1, playerWalk2]
+        self.playerJump = useful.load_scale_image(
             "graphics/player/sprite_knight_jump.png",
-            game.scale_x, game.scale_y, 1)
-        self.image = self.player_walk[self.player_index]
-        self.player_y = game.ground_y - self.image.get_height()
+            game.scaleX, game.scaleY, 1)
+        self.playerIndex = 0
+        self.image = self.playerWalk[self.playerIndex]
+        self.playerY = game.groundY - self.image.get_height()
         self.rect = self.image.get_rect(
-            midbottom=(80 * game.scale_x, self.player_y))
+            midbottom=(80 * game.scaleX, self.playerY))
+
+        self.jumpSound = pygame.mixer.Sound('audio/jump.mp3')
+        self.jumpSound.set_volume(0.5)
+
+        self.healthBar = HealthBar(game)
+
+        self.maxHealth = self.game.settings.playerHealth
+        self.currentHealth = self.game.settings.playerHealth
+        self.speed = game.settings.playerSpeed
+        self.jump = game.settings.playerJump
         self.gravity = 0
 
-        self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
-        self.jump_sound.set_volume(0.5)
-        self.speed = game.settings.player_speed
-        self.jump = game.settings.player_jump
-        self.max_health = self.game.settings.player_health
-        self.current_health = self.game.settings.player_health
-        self.hp_bar_w = game.settings.hp_bar_width * game.scale_x
-        self.hp_bar_h = game.settings.hp_bar_height * game.scale_y
-
     def reset(self):
-        self.current_health = self.max_health
+        self.currentHealth = self.maxHealth
         self.rect = self.image.get_rect(
-            midbottom=(80 * self.game.scale_x, self.player_y))
+            midbottom=(80 * self.game.scaleX, self.playerY))
 
     def take_damage(self, damage):
-        if self.current_health + damage <= self.max_health:
-            self.current_health += damage
-
-    def _display_player_hp(self):
-        """Wyświetla na środku na dole ekranu pasek zdrowia gracza."""
-        # RED BAR
-        x = self.game.screen_w / 2 - self.hp_bar_w / 2
-        y = self.game.screen_h - self.hp_bar_h
-        hp_bar_red = pygame.Rect((x, y), (self.hp_bar_w, self.hp_bar_h))
-        pygame.draw.rect(self.game.screen, self.game.settings.RED, hp_bar_red)
-        # GREEN BAR
-        proc_hp = self.hp_bar_w * (self.current_health / self.max_health)
-        hp_bar_green = pygame.Rect((x, y), (proc_hp, self.hp_bar_h))
-        pygame.draw.rect(self.game.screen, self.game.settings.GREEN,
-                         hp_bar_green)
-        # BLACK BORDER
-        pygame.draw.rect(self.game.screen, self.game.settings.BLACK,
-                         hp_bar_red, 2)
+        if self.currentHealth + damage <= self.maxHealth:
+            self.currentHealth += damage
 
     def player_input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and self.rect.bottom >= self.game.ground_y:
+        if keys[pygame.K_SPACE] and self.rect.bottom >= self.game.groundY:
             self.gravity = self.jump
-            self.jump_sound.play()
+            self.jumpSound.play()
         if keys[pygame.K_d] and self.rect.right <= self.game.screen.get_width():
             self.rect.x += self.speed
         if keys[pygame.K_a] and self.rect.left >= 0:
@@ -72,20 +58,20 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         self.gravity += 1
         self.rect.y += self.gravity
-        if self.rect.bottom >= self.game.ground_y:
-            self.rect.bottom = self.game.ground_y
+        if self.rect.bottom >= self.game.groundY:
+            self.rect.bottom = self.game.groundY
 
     def animation_state(self):
-        if self.rect.bottom < self.game.ground_y:
-            self.image = self.player_jump
+        if self.rect.bottom < self.game.groundY:
+            self.image = self.playerJump
         else:
-            self.player_index += 0.1
-            if self.player_index >= len(self.player_walk):
-                self.player_index = 0
-            self.image = self.player_walk[int(self.player_index)]
+            self.playerIndex += 0.1
+            if self.playerIndex >= len(self.playerWalk):
+                self.playerIndex = 0
+            self.image = self.playerWalk[int(self.playerIndex)]
 
     def update(self):
-        self._display_player_hp()
+        self.healthBar.display_player_hp(self.currentHealth, self.maxHealth)
         self.player_input()
         self.apply_gravity()
         self.animation_state()
