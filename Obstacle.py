@@ -37,12 +37,13 @@ class Obstacle(pygame.sprite.Sprite):
 
     def _load_imgs(self, type):
         """Funkcja ładująca obrazy do animacji dla sprite'a znajdujące się w
-        bibliotece /graphics o nazwie sprite_type_i, gdzie i to numer klatki."""
+        bibliotece /graphics o nazwie sprite_typei, gdzie i to numer klatki."""
 
         folder_path = f"graphics/{type}"
         file_count = len(os.listdir(folder_path))
-        for i in range(2):
-            img = pygame.image.load(f"{folder_path}/sprite_{type}{i + 1}.png").convert_alpha()
+        for i in range(file_count):
+            img = pygame.image.load(f"{folder_path}/sprite_{type}"
+                                    f"{i + 1}.png").convert_alpha()
             img = useful.scale_image(img, self.game.scale_x, self.game.scale_y)
             self.frames.append(img)
 

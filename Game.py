@@ -30,7 +30,7 @@ class Game:
         # Resources.
         #self.bg_music = pygame.mixer.Sound('audio/Hoppin.mp3')
         #self.bg_music.play(loops=-1)
-        self.bg_img = pygame.image.load('graphics/ground.png').convert()
+        self.bg_img = pygame.image.load('graphics/morninghill.png').convert()
 
         self.scale_x, self.scale_y = useful.get_scale(self.screen, self.bg_img)
         self.bg_img = useful.scale_image(self.bg_img, self.scale_x,
