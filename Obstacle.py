@@ -15,49 +15,48 @@ class Obstacle(pygame.sprite.Sprite):
 
         if type == 'storm':
             self._load_imgs(type)
-            self.damage = game.settings.enemy_damage
-            self.points = game.settings.enemy_points
-            y_pos = 0 + self.frames[0].get_height()
+            self.damage = game.settings.enemyDamage
+            self.points = game.settings.enemyPoints
+            yPos = 0 + self.frames[0].get_height()
         elif type == "snail":
             self._load_imgs(type)
-            self.damage = game.settings.enemy_damage
-            self.points = game.settings.enemy_points
-            y_pos = game.ground_y
+            self.damage = game.settings.enemyDamage
+            self.points = game.settings.enemyPoints
+            yPos = game.groundY
         elif type == "banana":
             self._load_imgs(type)
-            self.damage = game.settings.banana_heal
+            self.damage = game.settings.bananaHeal
             self.points = 0
-            y_pos = game.ground_y
+            yPos = game.groundY
 
-        self.animation_index = 0
-        self.image = self.frames[self.animation_index]
+        self.animationIndex = 0
+        self.image = self.frames[self.animationIndex]
         self.rect = self.image.get_rect(midbottom=(
-            randint(int(game.screen_w * 1.2), int(game.screen_w * 1.6)),
-            y_pos))
+            randint(int(game.screenW * 1.2), int(game.screenW * 1.6)), yPos))
 
     def _load_imgs(self, type):
         """Funkcja ładująca obrazy do animacji dla sprite'a znajdujące się w
         bibliotece /graphics o nazwie sprite_typei, gdzie i to numer klatki."""
 
-        folder_path = f"graphics/{type}"
-        file_count = len(os.listdir(folder_path))
-        for i in range(file_count):
-            img = pygame.image.load(f"{folder_path}/sprite_{type}"
+        folderPath = f"graphics/{type}"
+        fileCount = len(os.listdir(folderPath))
+        for i in range(fileCount):
+            img = pygame.image.load(f"{folderPath}/sprite_{type}"
                                     f"{i + 1}.png").convert_alpha()
-            img = useful.scale_image(img, self.game.scale_x, self.game.scale_y)
+            img = useful.scale_image(img, self.game.scaleX, self.game.scaleY)
             self.frames.append(img)
 
-    def animation_state(self):
-        self.animation_index += 0.05
-        if self.animation_index >= len(self.frames): self.animation_index = 0
-        self.image = self.frames[int(self.animation_index)]
-
-    def update(self):
-        self.animation_state()
-        self.rect.x -= self.game.settings.enemy_speed
-        self._destroy()
+    def _animation_state(self):
+        self.animationIndex += 0.05
+        if self.animationIndex >= len(self.frames): self.animationIndex = 0
+        self.image = self.frames[int(self.animationIndex)]
 
     def _destroy(self):
         if self.rect.right <= 0:
             self.game.statistics.score += self.points
             self.kill()
+
+    def update(self):
+        self._animation_state()
+        self.rect.x -= self.game.settings.enemySpeed
+        self._destroy()
