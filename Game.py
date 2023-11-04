@@ -10,7 +10,6 @@ from random import choice
 pygame.font.init()
 pygame.mixer.init()
 
-
 class Game:
     def __init__(self):
         # pygame.init()
@@ -30,6 +29,7 @@ class Game:
         # Resources.
         self.bgMusic = pygame.mixer.Sound('audio/Hoppin.mp3')
         self.bgMusic.play(loops=-1)
+        self.bgMusic.set_volume(0.1)
         self.bgImg = pygame.image.load('graphics/morninghill.png').convert()
 
         self.scaleX, self.scaleY = useful.get_scale(self.screen, self.bgImg)
