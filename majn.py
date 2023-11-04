@@ -155,7 +155,7 @@ class Obstacle(pygame.sprite.Sprite):
 
         folder_path = f"graphics/{type}"
         file_count = len(os.listdir(folder_path))
-        for i in range(file_count):
+        for i in range(2):
             img = pygame.image.load(f"{folder_path}/sprite_{type}"
                                     f"{i + 1}.png").convert_alpha()
             img = scale_image(img, self.game.scale_x, self.game.scale_y)
