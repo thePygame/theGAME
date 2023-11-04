@@ -3,9 +3,9 @@ import pygame
 
 def get_scale(screen: pygame.surface.Surface, image: pygame.surface.Surface):
     # szerokość okna / oryginalna szerokość obrazka
-    scaleX = screen.get_width() / image.get_width()
-    scaleY = screen.get_height() / image.get_height()
-    return scaleX, scaleY
+    scale_x = screen.get_width() / image.get_width()
+    scale_y = screen.get_height() / image.get_height()
+    return scale_x, scale_y
 
 
 def scale_image(image: pygame.surface.Surface, scale_x, scale_y):
@@ -18,7 +18,7 @@ def scale_image(image: pygame.surface.Surface, scale_x, scale_y):
 
 
 def load_scale_image(path, scale_x, scale_y, convert_alpha=0):
-    """Funkcja wczytuje z podanej ścieżki path obraz i skaluje go przez
+    """Funkcja wczytuje z podanej ścierzki path obraz i skaluje go przez
     podane skale scale_x i scale_y."""
     path = path
     if not convert_alpha:
